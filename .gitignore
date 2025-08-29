@@ -1,0 +1,10 @@
+# Terraform files
+*.tfstate
+*.tfstate.backup
+.terraform/
+crash.log
+
+# AWS credentials
+*.pem
+*.key
+*.csv
