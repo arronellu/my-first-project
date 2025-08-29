@@ -38,6 +38,14 @@ resource "aws_subnet" "private" {
   }
 }
 
+resource "aws_subnet" "private-new" {
+  vpc_id     = aws_vpc.prod.id
+  cidr_block = "10.0.3.0/24"
+  tags = {
+    Name = "private-new"
+  }
+}
+
 ####### Create IGW
 
 resource "aws_internet_gateway" "igw" {
