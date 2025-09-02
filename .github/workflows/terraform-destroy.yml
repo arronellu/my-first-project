@@ -1,22 +1,22 @@
 name: Terraform destroy
 
 on:
-   workflow_dispatch: {}  # <-- manual run button in Actions
+  workflow_dispatch:    # manual run button in Actions
 
 env:
   AWS_REGION: eu-central-1
-  TF_WORKING_DIR: .
+  TF_WORKING_DIR: .     # <— set your repo subfolder if needed
 
 jobs:
-   destroy:
-     runs-on: ubuntu-latest
-     defaults:
-        run:
-           working-directory: ${{ env.TF_WORKING_DIR }}
+  destroy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.TF_WORKING_DIR }}
+
     steps:
-      # Step 1: checkout repo
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -25,24 +25,11 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region:            ${{ env.AWS_REGION }}
 
-      # Step 2: setup Terraform
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v3
 
-
-      # Step 3: Terraform init
       - name: Terraform Init
-        run: terraform init
+        run: terraform init -input=false
 
-
-      # Step 4: Terraform destroy
       - name: Terraform Destroy
         run: terraform destroy -auto-approve -input=false
-
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-central-1
